@@ -1,6 +1,6 @@
 variable "region" {
     type = string
-    value = "us-west-1"
+    default = "us-west-1"
 }
 /*
  variable "main_vpc_cidr" {}
