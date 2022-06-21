@@ -134,7 +134,7 @@ output "instance_ips2" {
 
 
 
-
+/*
 resource "aws_db_instance" "default" {
   allocated_storage    = 10
   engine               = "mysql"
@@ -231,3 +231,4 @@ output "instance_ips" {
    allocation_id = aws_eip.nateIP.id
    subnet_id = aws_subnet.publicsubnets.id
  }
+*/
