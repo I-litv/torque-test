@@ -1,4 +1,5 @@
-resource "aws_instance" "vmweb" {
+
+/*resource "aws_instance" "vmweb" {
   ami = "ami-067f8db0a5c2309c0"
   instance_type = "t2.micro"
   vpc_security_group_ids = [ aws_security_group.websg.id ]
@@ -78,7 +79,7 @@ resource "aws_instance" "vmdb" {
     tags = {
       Name = "db"
     }
-}
+} */
 resource "aws_security_group" "websg" {
   name = "web-sg01"
   ingress {
