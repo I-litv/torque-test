@@ -1,19 +1,41 @@
-resource "aws_instance" "vm" {
-  ami = "ami-0d9858aa3c6322f73"
+resource "aws_instance" "vmweb" {
+  ami = "ami-067f8db0a5c2309c0"
   instance_type = "t2.micro"
   vpc_security_group_ids = [ aws_security_group.websg.id ]
-  user_data = <<-EOF
-                #!/bin/bash
-                echo "I LOVE TERRAFORM" > index.html
-                nohup busybox httpd -f -p 8080 &
-                EOF
+  user_data = <<EOF
+        #!/bin/bash
+        apt-get update -y
+        apt-get install default-jdk -y
+        apt-get install tomcat8 -y
+        apt-get install tomcat8-admin -y
+        DB_PASS=Password1
+        DB_USER=root
+        DB_NAME=test
+        DB_HOSTNAME="${aws_instance.db.private_ip}"
+        mkdir /home/artifacts
+        cd /home/artifacts || exit
+        git clone https://github.com/QualiTorque/sample_java_spring_source.git
+        mkdir /home/user/.config/torque-java-spring-sample -p
+        jdbc_url=jdbc:mysql://$DB_HOSTNAME/$DB_NAME
+        bash -c "cat >> /home/user/.config/torque-java-spring-sample/app.properties" <<EOL
+        # Dadabase connection settings:
+        jdbc.url=$jdbc_url
+        jdbc.username=$DB_USER
+        jdbc.password=$DB_PASS
+        EOL
+        #remove the tomcat default ROOT web application
+        rm -rf /var/lib/tomcat8/webapps/ROOT
+        # deploy the application as the ROOT web application
+        cp sample_java_spring_source/artifacts/torque-java-spring-sample-1.0.0-BUILD-SNAPSHOT.war /var/lib/tomcat8/webapps/ROOT.war
+        systemctl start tomcat8
+        EOF
     tags = {
-      Name = "WEB-demo"
+      Name = "web"
     }
 }
 
 resource "aws_instance" "vmdb" {
-  ami = "ami-0d9858aa3c6322f73"
+  ami = "ami-067f8db0a5c2309c0"
   instance_type = "t2.micro"
   vpc_security_group_ids = [ aws_security_group.websg.id ]
   user_data = <<EOF
@@ -54,7 +76,7 @@ resource "aws_instance" "vmdb" {
         systemctl restart mysql.service
         EOF
     tags = {
-      Name = "WEB-demo"
+      Name = "db"
     }
 }
 resource "aws_security_group" "websg" {
@@ -67,8 +89,12 @@ resource "aws_security_group" "websg" {
   }
 }
 output "instance_ips" {
-  value = aws_instance.tfvm.public_ip
+  value = aws_instance.vmweb.public_ip
+}  
+output "instance_ips2" {
+     value = aws_instance.vmdb.public_ip
 }
+ 
 
 
 
