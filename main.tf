@@ -12,7 +12,7 @@ resource "aws_instance" "vmweb" {
         DB_PASS=Password1
         DB_USER=root
         DB_NAME=test
-        DB_HOSTNAME="${aws_instance.db.private_ip}"
+        DB_HOSTNAME="${aws_instance.vmdb.private_ip}"
         mkdir /home/artifacts
         cd /home/artifacts || exit
         git clone https://github.com/QualiTorque/sample_java_spring_source.git
