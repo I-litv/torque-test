@@ -1,0 +1,6 @@
+- hosts: all
+  vars: 
+  - msg: "{{globalTxt|default('No Message')}}"
+  tasks:
+  - name: Print globalTxt
+    debug: var=msg
