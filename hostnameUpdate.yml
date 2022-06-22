@@ -1,3 +1,5 @@
-- name: Set a hostname
-  ansible.builtin.hostname:
-    name: globalTxt
+- vars: 
+  - msg: "{{globalTxt|default('Default')}}"
+  name: Set a hostname
+    ansible.builtin.hostname:
+      name: globalTxt

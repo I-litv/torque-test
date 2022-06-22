@@ -1,4 +1,8 @@
 - hosts: all
   tasks:
-  - name: install apache
-    yum: name=httpd update_cache=yes state=latest
+    - name: install apache
+      yum: name=httpd update_cache=yes state=latest
+  handlers:
+    - name: start apache
+      service: name=httpd state=start
+
