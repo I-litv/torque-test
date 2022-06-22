@@ -2,7 +2,8 @@
   tasks:
     - name: install apache
       yum: name=httpd update_cache=yes state=latest
-  handlers:
     - name: start apache
-      service: name=httpd state=start
+      service:
+        name: httpd
+        state: started
 
