@@ -1,6 +1,9 @@
 - hosts: all
   vars: 
   - msg: "{{globalTxt|default('No Message')}}"
+  - gbNum: "{{globalNum|default('No Message')}}"
   tasks:
   - name: Print globalTxt
     debug: var=msg
+  - name: Print globalNum
+    debug: var=gbNum
