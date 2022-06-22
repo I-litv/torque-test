@@ -1,9 +1,13 @@
 - hosts: all
-  tasks:
-    - name: install apache
-      yum: name=httpd update_cache=yes state=latest
-    - name: start apache
-      service:
-        name: httpd
-        state: started
-
+  tasks: 
+   - name: install httpd
+     yum: name=httpd update_cache=yes state=latest
+   - name: start httpd
+     service:
+      name: httpd
+      state: started
+   - name: Iptables flush filter
+     ansible.builtin.iptables:
+       chain: "{{ item }}"
+       flush: yes
+     with_items:  [ 'INPUT', 'FORWARD', 'OUTPUT' ]
